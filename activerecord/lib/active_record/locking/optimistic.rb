@@ -70,7 +70,7 @@ module ActiveRecord
       end
 
       private
-        def _create_record(attribute_names = self.attribute_names)
+        def _create_record(attribute_names = self.attribute_names, **options)
           if locking_enabled?
             # We always want to persist the locking version, even if we don't detect
             # a change from the default, since the database might have no default

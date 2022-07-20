@@ -457,8 +457,8 @@ module ActiveRecord
       _run_save_callbacks { super }
     end
 
-    def _create_record
-      _run_create_callbacks { super }
+    def _create_record(**options)
+      _run_create_callbacks { super(nil, **options) }
     end
 
     def _update_record

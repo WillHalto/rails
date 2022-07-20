@@ -1085,10 +1085,10 @@ module ActiveRecord
       )
     end
 
-    def create_or_update(**, &block)
+    def create_or_update(**options, &block)
       _raise_readonly_record_error if readonly?
       return false if destroyed?
-      result = new_record? ? _create_record(&block) : _update_record(&block)
+      result = new_record? ? _create_record(**options, &block) : _update_record(&block)
       result != false
     end
 
@@ -1114,12 +1114,18 @@ module ActiveRecord
 
     # Creates a record with values matching those of the instance attributes
     # and returns its id.
-    def _create_record(attribute_names = self.attribute_names)
-      attribute_names = attributes_for_create(attribute_names)
-
-      new_id = self.class._insert_record(
+    def _create_record(attribute_names = self.attribute_names, **options)
+      attribute_names = attributes_for_create(attribute_names || self.attribute_names)
+      new_id = if options[:on_duplicate]&.delete(:update) 
+        self.class.upsert(
+          attribute_names.index_with{|name| @attributes[name].value}, 
+          **options[:on_duplicate]
+        ) 
+      else
+        self.class._insert_record(
         attributes_with_values(attribute_names)
-      )
+        )
+      end
 
       self.id ||= new_id if @primary_key
 

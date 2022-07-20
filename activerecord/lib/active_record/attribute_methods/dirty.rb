@@ -218,7 +218,7 @@ module ActiveRecord
           affected_rows
         end
 
-        def _create_record(attribute_names = attribute_names_for_partial_inserts)
+        def _create_record(attribute_names = attribute_names_for_partial_inserts, **options)
           id = super
           changes_applied
           id

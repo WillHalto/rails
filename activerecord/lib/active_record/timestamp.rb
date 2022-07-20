@@ -96,7 +96,7 @@ module ActiveRecord
     end
 
   private
-    def _create_record
+    def _create_record(**options)
       if record_timestamps
         current_time = current_time_from_proper_timezone
 
@@ -105,7 +105,7 @@ module ActiveRecord
         end
       end
 
-      super
+      super(**options)
     end
 
     def _update_record
