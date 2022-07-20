@@ -1116,10 +1116,10 @@ module ActiveRecord
     # and returns its id.
     def _create_record(attribute_names = self.attribute_names, **options)
       attribute_names = attributes_for_create(attribute_names || self.attribute_names)
-      new_id = if options[:on_duplicate]&.delete(:update) 
+      new_id = if options[:on_duplicate_update] 
         self.class.upsert(
           attribute_names.index_with{|name| @attributes[name].value}, 
-          **options[:on_duplicate]
+          **options[:on_duplicate_update]
         ) 
       else
         self.class._insert_record(
